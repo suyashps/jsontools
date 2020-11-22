@@ -20,7 +20,6 @@ import java.util.Map;
 public class JSONFlattnerTest {
     String testResourcePath =  "src/test/resources";
     JSONFlattener jsonFlanttner;
-    ObjectMapper jsonObjectMapper;
     @Before
     public void init(){
         jsonFlanttner = new JSONFlattener();

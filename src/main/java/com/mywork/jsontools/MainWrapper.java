@@ -35,7 +35,6 @@ public class MainWrapper {
         File argFile = null;
         if (args.length > 0) {
             testFile = args[0];
-            testFile = "src/test/resources/escaped_string.json";
             argFile = new File(testFile);
         } else {
             System.out.println("Missing args: json file. See README for details.");
