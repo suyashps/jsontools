@@ -24,45 +24,61 @@ public class JSONFlattnerTest {
     @Before
     public void init(){
         jsonFlanttner = new JSONFlattener();
-        jsonObjectMapper = new ObjectMapper();
     }
     @Test
     public void flatten2NestedJsonTest() throws IOException {
-        Map<String, JsonNode> flattenedJson = jsonFlanttner.flatten(new File(testResourcePath + "/nested_2.json"));
-        JsonNode input = jsonObjectMapper.readTree(jsonObjectMapper.writeValueAsString(flattenedJson));
-        JsonNode output = jsonObjectMapper.readTree(new File(testResourcePath + "/flattened/nested_2_flat.json"));
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/nested_2.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/nested_2_flat.json"));
         Assert.assertEquals(input,output);
     }
 
     @Test
     public void flatten3plusNestedJsonTest() throws IOException {
-        Map<String, JsonNode> flattenedJson = jsonFlanttner.flatten(new File(testResourcePath + "/nested_3.json"));
-        JsonNode input = jsonObjectMapper.readTree(jsonObjectMapper.writeValueAsString(flattenedJson));
-        JsonNode output = jsonObjectMapper.readTree(new File(testResourcePath + "/flattened/nested_3_flat.json"));
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/nested_3.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/nested_3_flat.json"));
         Assert.assertEquals(input,output);
     }
 
     @Test(expected = JsonParseException.class)
     public void badJsonTest() throws IOException {
-        Map<String, JsonNode> flattenedJson = jsonFlanttner.flatten(new File(testResourcePath + "/bad_json.json"));
-        JsonNode input = jsonObjectMapper.readTree(jsonObjectMapper.writeValueAsString(flattenedJson));
-        JsonNode output = jsonObjectMapper.readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/bad_json.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
         Assert.assertEquals(input,output);
     }
 
     @Test
     public void emptyJsonTest() throws IOException {
-        Map<String, JsonNode> flattenedJson = jsonFlanttner.flatten(new File(testResourcePath + "/blank.json"));
-        JsonNode input = jsonObjectMapper.readTree(jsonObjectMapper.writeValueAsString(flattenedJson));
-        JsonNode output = jsonObjectMapper.readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/blank.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
         Assert.assertEquals(input,output);
     }
 
     @Test(expected = JsonParseException.class)
     public void emptyFileTest() throws IOException {
-        Map<String, JsonNode> flattenedJson = jsonFlanttner.flatten(new File(testResourcePath + "/bad_file.json"));
-        JsonNode input = jsonObjectMapper.readTree(jsonObjectMapper.writeValueAsString(flattenedJson));
-        JsonNode output = jsonObjectMapper.readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/bad_file.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
+        Assert.assertEquals(input,output);
+    }
+
+    @Test
+    public void stringEscapeGoodTest() throws IOException {
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/escaped_string.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/escape_good.json"));
+        Assert.assertEquals(input,output);
+    }
+
+
+    @Test(expected = JsonParseException.class)
+    public void stringEscapeBadTest() throws IOException {
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/bad_escaped_string.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/default_empty_file.json"));
+        Assert.assertEquals(input,output);
+    }
+
+    @Test
+    public void dateStringTest() throws IOException {
+        JsonNode input = jsonFlanttner.flattenAsJsonNode(new File(testResourcePath + "/date.json"));
+        JsonNode output = jsonFlanttner.getJsonObjectMapper().readTree(new File(testResourcePath + "/flattened/date_flat.json"));
         Assert.assertEquals(input,output);
     }
 }

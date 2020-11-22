@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,37 +14,32 @@ public class MainWrapper {
 
     public static void main(String[] args) {
 
-        FileReader argFileReader = getFileFromArgs(args);
-        if (argFileReader == null){
+        File argFile = getFileFromArgs(args);
+        if (argFile == null) {
             return;
         }
 
-        ObjectMapper dataMapper = new ObjectMapper();
         JSONFlattener jsonFlattener = new JSONFlattener();
 
         try {
-            Map<String,JsonNode> output = jsonFlattener.flatten(argFileReader);
-            System.out.println(dataMapper.writeValueAsString(output));
+            System.out.println(jsonFlattener.flattenAsString(argFile));
         } catch (JsonProcessingException e) {
             System.out.println("Error parsing json: " + e.getMessage());
-        }  catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error reading file contents: " + e.getMessage());
         }
     }
 
-    private static FileReader getFileFromArgs(String[] args){
+    private static File getFileFromArgs(String[] args) {
         String testFile;
-        FileReader argFileReader = null;
-        if(args.length > 0){
+        File argFile = null;
+        if (args.length > 0) {
             testFile = args[0];
-            try{
-                argFileReader = new FileReader(testFile);
-            } catch(FileNotFoundException fne){
-                System.out.println("File not found: " + testFile);
-            }
+            testFile = "src/test/resources/escaped_string.json";
+            argFile = new File(testFile);
         } else {
-            System.out.println("Missing args: json file");
+            System.out.println("Missing args: json file. See README for details.");
         }
-        return argFileReader;
+        return argFile;
     }
 }

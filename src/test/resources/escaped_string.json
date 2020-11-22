@@ -1,0 +1,7 @@
+{
+  "text": "This string has escaped char and 'quotes' are here.",
+  "name": {
+    "first": "John",
+    "last": "Doe"
+}
+}
